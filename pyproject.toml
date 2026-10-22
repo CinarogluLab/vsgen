@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vsgen"
+version = "0.1.0"
+description = "Fast 3D ligand preparation for docking (a Gypsum-DL alternative)"
+license-files = ["LICENSE", "NOTICE", "vsgen/data/MOLGPKA_LICENSE.md", "vsgen/third_party/UNIPKA_LICENSE"]
+requires-python = ">=3.10"
+readme = "README.md"
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Chemistry",
+]
+dependencies = ["rdkit>=2024.3", "dimorphite_dl==2.1.0", "numpy"]
+
+[project.optional-dependencies]
+gpu = []  # nvMolKit: install from conda-forge (`mamba install -c conda-forge nvmolkit`)
+unipka = ["unipkainfer>=0.2,<0.3", "pandas>=2.1"]  # vsgen/pka_unipka.py patches unipkainfer internals  # optional pKa backend; needs a checkpoint (see README)
+test = ["pytest"]
+
+[project.scripts]
+vsgen = "vsgen.cli:main"
+vsgen-protomers = "vsgen.protomers_cli:main"
+
+[tool.setuptools]
+packages = ["vsgen", "vsgen.third_party"]
+
+[tool.setuptools.package-data]
+vsgen = ["data/*.npz", "data/*.tsv", "data/*.md"]
+"vsgen.third_party" = ["*LICENSE*"]
